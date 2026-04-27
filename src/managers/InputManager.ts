@@ -7,17 +7,21 @@ import type { Hero } from '../entities/Hero';
  */
 export class InputManager {
   private readonly canvas: HTMLCanvasElement;
+  private readonly app: Application;
   private readonly hero: Hero;
   private readonly onPointerDown: (e: PointerEvent) => void;
 
   constructor(app: Application, hero: Hero) {
+    this.app = app;
     this.canvas = app.view as HTMLCanvasElement;
     this.hero = hero;
 
     this.onPointerDown = (e: PointerEvent) => {
       const rect = this.canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const scaleX = this.app.screen.width / rect.width;
+      const scaleY = this.app.screen.height / rect.height;
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
       this.hero.moveTo(Vector2.from(x, y));
     };
 
